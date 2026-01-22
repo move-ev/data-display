@@ -7,7 +7,7 @@ export default async function ServerPage() {
 
 	return (
 		<main>
-			<section className="px-8 py-12">
+			<section className="py-12">
 				<DataList columns={columns} data={tasks} />
 			</section>
 		</main>
