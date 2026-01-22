@@ -2,7 +2,7 @@
 
 import type { Row, Table } from "@tanstack/react-table";
 import type React from "react";
-import { ListGroupHeader } from "./list";
+import { ListActionSlot, ListGroupHeader, ListGroupToggle } from "./list";
 
 export function DataListGroupHeader<TData>({
 	row,
@@ -14,11 +14,6 @@ export function DataListGroupHeader<TData>({
 	row: Row<TData>;
 	countItems?: boolean;
 }) {
-	// The grouping information is available on the row via `row.groupingColumnId` if using TanStack Table v8+,
-	// but you can generally access the grouped column via the `row.groupByID` or by looking at the row's
-	// `groupingColumnId` or the first value in `row.getAllCells()`.
-
-	// To get the id of the column this group header represents:
 	const groupedByColumnId = row.groupingColumnId;
 
 	if (!groupedByColumnId) {
@@ -37,6 +32,14 @@ export function DataListGroupHeader<TData>({
 
 	return (
 		<ListGroupHeader {...props}>
+			<ListActionSlot>
+				{row.getCanExpand() && (
+					<ListGroupToggle
+						data-expanded={row.getIsExpanded()}
+						onClick={row.getToggleExpandedHandler()}
+					/>
+				)}
+			</ListActionSlot>
 			{icon && <>{icon}</>}
 			{label ?? "Gruppe"}
 		</ListGroupHeader>

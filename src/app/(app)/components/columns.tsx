@@ -1,10 +1,40 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { CalendarX2Icon, CircleIcon } from "lucide-react";
+import { ListActionSlot } from "@/components/data-display/list";
 import { PriorityIcon } from "@/components/priority-icon";
 import { StatusIcon } from "@/components/status-icon";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { Task } from "@/lib/types";
-import { translatePriority, translateStatus } from "@/lib/utils";
+import { cn, translatePriority, translateStatus } from "@/lib/utils";
+
+const selectColumn: ColumnDef<Task> = {
+	id: "select",
+	cell: ({ row }) => {
+		return (
+			<ListActionSlot>
+				<Checkbox
+					aria-label="Select row"
+					checked={row.getIsSelected()}
+					className={
+						""
+						// "border-foreground/40 opacity-0 hover:border-foreground/70 group-hover/list-item:opacity-100 data-checked:opacity-100"
+					}
+					onCheckedChange={(value) => row.toggleSelected(!!value)}
+				/>
+			</ListActionSlot>
+		);
+	},
+	enableGrouping: false,
+	enableSorting: false,
+	enableHiding: false,
+	meta: {
+		label: "Select",
+	},
+};
 
 const statusColumn: ColumnDef<Task> = {
 	accessorKey: "status",
@@ -40,13 +70,19 @@ const statusColumn: ColumnDef<Task> = {
 const priorityColumn: ColumnDef<Task> = {
 	accessorKey: "priority",
 	enableGrouping: true,
-	enableSorting: false,
+	enableSorting: true,
 	cell: ({ row }) => {
 		return (
 			<span>
 				<PriorityIcon className="size-4" priority={row.original.priority} />
 				<span className="sr-only">{translatePriority(row.original.priority)}</span>
 			</span>
+		);
+	},
+	sortingFn: (rowA, rowB) => {
+		const order = ["NONE", "LOW", "MEDIUM", "HIGH", "URGENT"];
+		return (
+			order.indexOf(rowA.original.priority) - order.indexOf(rowB.original.priority)
 		);
 	},
 	meta: {
@@ -62,26 +98,81 @@ const priorityColumn: ColumnDef<Task> = {
 		),
 	},
 };
-export const columns: ColumnDef<Task>[] = [
-	statusColumn,
-	priorityColumn,
-	{
-		accessorKey: "id",
-		cell: ({ row }) => {
-			return (
-				<div>
-					<span className="text-muted-foreground text-sm">{row.original.id}</span>
-				</div>
-			);
-		},
-		enableGrouping: false,
-		enableSorting: false,
+
+const idColumn: ColumnDef<Task> = {
+	accessorKey: "id",
+	cell: ({ row }) => {
+		return (
+			<div>
+				<span className="text-muted-foreground text-sm">{row.original.id}</span>
+			</div>
+		);
 	},
+	enableGrouping: false,
+	enableSorting: false,
+	enableHiding: true,
+	meta: {
+		label: "ID",
+	},
+};
+
+const tagsColumn: ColumnDef<Task> = {
+	accessorKey: "tags",
+	cell: ({ row }) => {
+		return (
+			<div className="flex gap-1">
+				{row.original.tags.map((tag) => (
+					<Badge className="gap-1.5" key={tag.value} variant={"outline"}>
+						<CircleIcon className={cn(tag.className, "size-2! fill-current")} />
+						<span>{tag.label}</span>
+					</Badge>
+				))}
+			</div>
+		);
+	},
+	enableGrouping: true,
+	meta: {
+		label: "Tags",
+	},
+};
+
+const deadlineColumn: ColumnDef<Task> = {
+	accessorKey: "deadline",
+	cell: ({ row }) => {
+		return (
+			<Badge variant={"outline"}>
+				<CalendarX2Icon className="text-red-500" />
+				<span>{format(row.original.deadline, "dd.MM.")}</span>
+			</Badge>
+		);
+	},
+	enableGrouping: false,
+	enableSorting: true,
+	enableHiding: true,
+	meta: {
+		label: "Deadline",
+	},
+};
+
+export const columns: ColumnDef<Task>[] = [
+	selectColumn,
+	priorityColumn,
+	idColumn,
+	statusColumn,
 	{
 		accessorKey: "title",
 		enableGrouping: false,
+		cell: ({ row }) => {
+			return (
+				<span className="text-sm" data-spacer>
+					{row.original.title}
+				</span>
+			);
+		},
 		meta: {
 			label: "Title",
 		},
 	},
+	tagsColumn,
+	deadlineColumn,
 ];

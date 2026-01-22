@@ -1,4 +1,10 @@
-import { Sidebar, SidebarContent, SidebarMenuSkeleton } from "./ui/sidebar";
+import { ModeToggle } from "./theme-toggle";
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarMenuSkeleton,
+} from "./ui/sidebar";
 
 export function DemoSidebar({
 	...props
@@ -8,6 +14,9 @@ export function DemoSidebar({
 			<SidebarContent>
 				<SidebarMenuSkeleton />
 			</SidebarContent>
+			<SidebarFooter>
+				<ModeToggle />
+			</SidebarFooter>
 		</Sidebar>
 	);
 }

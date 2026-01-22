@@ -27,8 +27,8 @@ export function DataDisplayOptions<TData>({
 					</Button>
 				}
 			/>
-			<PopoverContent align="end">
-				<div className="grid gap-4 px-2">
+			<PopoverContent align="end" className={"space-y-4 p-4"}>
+				<div className="grid gap-4">
 					<div className="grid grid-cols-2 gap-2">
 						<Label htmlFor="group-by">
 							<LayoutListIcon className="size-3.5" />
@@ -53,6 +53,14 @@ export function DataDisplayOptions<TData>({
 						/>
 					</div>
 				</div>
+				<div>
+					<Label htmlFor="column-visibility">Display Properties</Label>
+					<DataDisplayColumnVisibilityOptions
+						className="mt-2"
+						display={display}
+						id="column-visibility"
+					/>
+				</div>
 			</PopoverContent>
 		</Popover>
 	);
@@ -69,6 +77,7 @@ function DataDisplayGroupingOptions<TData>({
 	const handleChange = React.useCallback(
 		(value: string) => {
 			display.setGrouping([value]);
+			display.setExpanded(true);
 		},
 		[display],
 	);
@@ -160,6 +169,37 @@ function DataDisplaySortingOptions<TData>({
 					<span className="sr-only">Sort {sortDirection}</span>
 				</Button>
 			)}
+		</div>
+	);
+}
+
+function DataDisplayColumnVisibilityOptions<TData>({
+	display,
+	className,
+	...props
+}: React.ComponentProps<"div"> & { display: Table<TData> }) {
+	const toggleableColumns = display
+		.getAllColumns()
+		.filter((column) => column.getCanHide());
+
+	const handleToggleColumnVisibility = (columnId: string) => {
+		display.getColumn(columnId)?.toggleVisibility();
+	};
+
+	return (
+		<div className={cn("flex flex-wrap gap-1", className)} {...props}>
+			{toggleableColumns.map((column) => (
+				<Button
+					className={"data-[hidden=true]:opacity-50"}
+					data-hidden={!column.getIsVisible()}
+					key={column.id}
+					onClick={() => handleToggleColumnVisibility(column.id)}
+					size="xs"
+					variant="outline"
+				>
+					{column.columnDef.meta?.label}
+				</Button>
+			))}
 		</div>
 	);
 }

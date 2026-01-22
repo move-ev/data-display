@@ -1,14 +1,21 @@
+import { Button } from "@base-ui/react";
+import { ChevronRight } from "lucide-react";
 import type React from "react";
 import { cn } from "@/lib/utils";
 
-export function List({ className, ...props }: React.ComponentProps<"ul">) {
+export function List({
+	className,
+	layout = "default",
+	...props
+}: React.ComponentProps<"ul"> & { layout?: "compact" | "default" | "loose" }) {
 	return (
 		<ul
 			className={cn(
 				"group/list",
-				"[--list-px:1rem] [--list-py:0.75rem]",
+				"[--list-px:1rem] [--list-py:0.75rem] [--w-action-cell:2rem]",
 				className,
 			)}
+			data-layout={layout}
 			data-slot="list"
 			{...props}
 		/>
@@ -22,7 +29,8 @@ export function ListGroupHeader({
 	return (
 		<li
 			className={cn(
-				"flex items-center justify-start gap-2 border-y bg-muted px-(--list-px) py-2 font-medium text-foreground text-sm [&_svg]:size-4",
+				"flex items-center justify-start gap-2 border-border border-b bg-muted px-2 font-medium text-foreground text-sm first:border-t [&_svg]:size-4",
+				'group-data-[layout="compact"]/list:h-8.5 group-data-[layout="default"]/list:h-10 group-data-[layout="loose"]/list:h-12',
 				className,
 			)}
 			data-slot=""
@@ -35,11 +43,51 @@ export function ListItem({ className, ...props }: React.ComponentProps<"li">) {
 	return (
 		<li
 			className={cn(
-				"flex items-center justify-start gap-2 px-(--list-px) py-(--list-py) text-sm",
+				"group/list-item flex items-center justify-start gap-2 px-2 py-(--list-py) text-sm hover:bg-muted/60 data-selected:bg-primary/10 dark:data-selected:bg-primary/20",
+				'group-data-[layout="compact"]/list:h-8.5 group-data-[layout="default"]/list:h-10 group-data-[layout="loose"]/list:h-12',
+				"[&:hover_[role='checkbox']]:opacity-100 [&_[role='checkbox']:hover]:border-foreground/70 [&_[role='checkbox'][data-checked]]:border-primary [&_[role='checkbox'][data-checked]]:opacity-100 **:[[role='checkbox']]:border-foreground/40 **:[[role='checkbox']]:opacity-0",
+
 				className,
 			)}
-			data-slot=""
+			data-slot="list-item"
 			{...props}
 		/>
+	);
+}
+
+export function ListActionSlot({
+	className,
+	...props
+}: React.ComponentProps<"div">) {
+	return (
+		<div
+			className={cn(
+				'me-1 flex min-w-6 items-center justify-center group-data-[layout="compact"]/list:h-8.5 group-data-[layout="default"]/list:h-10 group-data-[layout="loose"]/list:h-12',
+				className,
+			)}
+			data-slot="list-action-slot"
+			{...props}
+		/>
+	);
+}
+
+export function ListGroupToggle({
+	className,
+	...props
+}: React.ComponentProps<typeof Button>) {
+	return (
+		<Button
+			className={cn(
+				"group/list-group-toggle flex size-full items-center justify-center",
+				className,
+			)}
+			{...props}
+		>
+			<ChevronRight
+				className={cn(
+					"size-4 transform text-muted-foreground transition-[transform,translate,rotate,color] duration-75 ease-in group-hover/list-group-toggle:text-foreground group-data-[expanded=true]/list-group-toggle:rotate-90",
+				)}
+			/>
+		</Button>
 	);
 }

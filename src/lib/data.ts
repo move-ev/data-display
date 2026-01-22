@@ -1,13 +1,53 @@
 import { faker } from "@faker-js/faker";
 import type { Priority, Tag, Task, TaskStatus, User } from "./types";
 
-export function generateTasks(
-	count: number,
-	args?: { userCount?: number; tagCount?: number },
-) {
+const tags: Tag[] = [
+	{
+		value: "feature",
+		label: "Feature",
+		className: "text-blue-500",
+	},
+	{
+		value: "bug",
+		label: "Bug",
+		className: "text-red-500",
+	},
+	{
+		value: "documentation",
+		label: "Documentation",
+		className: "text-green-500",
+	},
+	{
+		value: "refactoring",
+		label: "Refactoring",
+		className: "text-yellow-500",
+	},
+	{
+		value: "maintenance",
+		label: "Maintenance",
+		className: "text-gray-500",
+	},
+	{
+		value: "testing",
+		label: "Testing",
+		className: "text-purple-500",
+	},
+	{
+		value: "performance",
+		label: "Performance",
+		className: "text-pink-500",
+	},
+	{
+		value: "security",
+		label: "Security",
+		className: "text-orange-500",
+	},
+];
+
+export function generateTasks(count: number, args?: { userCount?: number }) {
 	const projects = ["TES", "KLE", "RIO", "DEV"];
 
-	const { userCount = 10, tagCount = 10 } = args ?? {};
+	const { userCount = 10 } = args ?? {};
 
 	const users: User[] = faker.helpers.multiple(
 		() => ({
@@ -16,14 +56,6 @@ export function generateTasks(
 			email: faker.internet.email(),
 		}),
 		{ count: userCount },
-	);
-
-	const tags: Tag[] = faker.helpers.multiple(
-		() => ({
-			value: faker.string.uuid(),
-			label: faker.lorem.word(),
-		}),
-		{ count: tagCount },
 	);
 
 	let i = 0;
@@ -48,13 +80,7 @@ export function generateTasks(
 			deadline: faker.date.future(),
 			createdAt: faker.date.past(),
 			lastUpdatedAt: faker.date.recent(),
-			tags: faker.helpers.multiple(
-				() => ({
-					value: faker.string.uuid(),
-					label: faker.lorem.word(),
-				}),
-				{ count: faker.number.int({ min: 1, max: 3 }) },
-			),
+			tags: faker.helpers.arrayElements(tags, { min: 1, max: 3 }),
 			priority: faker.helpers.arrayElement([
 				"NONE",
 				"LOW",

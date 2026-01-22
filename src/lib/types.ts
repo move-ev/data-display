@@ -16,6 +16,7 @@ export interface User {
 export interface Tag {
 	value: string;
 	label: string;
+	className?: string;
 }
 
 export interface Task {
