@@ -1,11 +1,12 @@
 import { faker } from "@faker-js/faker";
-import type { Tag, Task, User } from "./types";
-import { Priority, TaskStatus } from "./types";
+import type { Priority, Tag, Task, TaskStatus, User } from "./types";
 
 export function generateTasks(
 	count: number,
 	args?: { userCount?: number; tagCount?: number },
 ) {
+	const projects = ["TES", "KLE", "RIO", "DEV"];
+
 	const { userCount = 10, tagCount = 10 } = args ?? {};
 
 	const users: User[] = faker.helpers.multiple(
@@ -25,12 +26,22 @@ export function generateTasks(
 		{ count: tagCount },
 	);
 
-	const tasks: Task[] = faker.helpers.multiple(
-		() => ({
-			id: faker.string.uuid(),
-			status: faker.helpers.arrayElement(
-				Object.values(TaskStatus) as TaskStatus[],
-			),
+	let i = 0;
+	const tasks: Task[] = [];
+	while (tasks.length < count) {
+		const project = faker.helpers.arrayElement(projects);
+		const id = `${project}-${i}`;
+		i++;
+		tasks.push({
+			id,
+			title: faker.lorem.sentence({ min: 2, max: 5 }),
+			status: faker.helpers.arrayElement([
+				"TODO",
+				"IN_PROGRESS",
+				"COMPLETED",
+				"BLOCKED",
+				"STALE",
+			] as unknown as TaskStatus[]),
 			assignee: faker.datatype.boolean()
 				? faker.helpers.arrayElement(users)
 				: null,
@@ -44,10 +55,15 @@ export function generateTasks(
 				}),
 				{ count: faker.number.int({ min: 1, max: 3 }) },
 			),
-			priority: faker.helpers.arrayElement(Object.values(Priority) as Priority[]),
-		}),
-		{ count },
-	);
+			priority: faker.helpers.arrayElement([
+				"NONE",
+				"LOW",
+				"MEDIUM",
+				"HIGH",
+				"URGENT",
+			] as Priority[]),
+		});
+	}
 
 	return {
 		tags,
