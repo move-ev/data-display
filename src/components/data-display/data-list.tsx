@@ -27,6 +27,9 @@ export function DataList<TData, TValue>({
 	columns,
 	data,
 }: DataListProps<TData, TValue>) {
+	const [layout, setLayout] = useState<"compact" | "default" | "loose">(
+		"default",
+	);
 	const [grouping, setGrouping] = useState<string[]>([]);
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -60,9 +63,13 @@ export function DataList<TData, TValue>({
 	return (
 		<div>
 			<div className="flex items-center justify-end px-4 py-4">
-				<DataDisplayOptions display={display} />
+				<DataDisplayOptions
+					display={display}
+					layout={layout}
+					onLayoutChange={setLayout}
+				/>
 			</div>
-			<List>
+			<List layout={layout}>
 				{display.getRowModel().rows.map((row) => {
 					if (row.getIsGrouped()) {
 						return <DataListGroupHeader display={display} key={row.id} row={row} />;

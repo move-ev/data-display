@@ -14,10 +14,17 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
 export function DataDisplayOptions<TData>({
 	display,
-}: React.ComponentProps<typeof Popover> & { display: Table<TData> }) {
+	layout,
+	onLayoutChange,
+}: React.ComponentProps<typeof Popover> & {
+	display: Table<TData>;
+	layout: "compact" | "default" | "loose";
+	onLayoutChange: (layout: "compact" | "default" | "loose") => void;
+}) {
 	return (
 		<Popover>
 			<PopoverTrigger
@@ -29,6 +36,10 @@ export function DataDisplayOptions<TData>({
 			/>
 			<PopoverContent align="end" className={"space-y-4 p-4"}>
 				<div className="grid gap-4">
+					<DataDisplayLayoutOptions
+						layout={layout}
+						onLayoutChange={onLayoutChange}
+					/>
 					<div className="grid grid-cols-2 gap-2">
 						<Label htmlFor="group-by">
 							<LayoutListIcon className="size-3.5" />
@@ -63,6 +74,25 @@ export function DataDisplayOptions<TData>({
 				</div>
 			</PopoverContent>
 		</Popover>
+	);
+}
+
+function DataDisplayLayoutOptions({
+	layout,
+	onLayoutChange,
+	...props
+}: React.ComponentProps<typeof Tabs> & {
+	layout: "compact" | "default" | "loose";
+	onLayoutChange: (layout: "compact" | "default" | "loose") => void;
+}) {
+	return (
+		<Tabs onValueChange={onLayoutChange} value={layout} {...props}>
+			<TabsList className={"w-full"}>
+				<TabsTrigger value="compact">Compact</TabsTrigger>
+				<TabsTrigger value="default">Default</TabsTrigger>
+				<TabsTrigger value="loose">Loose</TabsTrigger>
+			</TabsList>
+		</Tabs>
 	);
 }
 

@@ -31,7 +31,7 @@ export function DataListGroupHeader<TData>({
 	)?.icon;
 
 	return (
-		<ListGroupHeader {...props}>
+		<ListGroupHeader data-collapsed={!row.getIsExpanded()} {...props}>
 			<ListActionSlot>
 				{row.getCanExpand() && (
 					<ListGroupToggle
@@ -40,7 +40,7 @@ export function DataListGroupHeader<TData>({
 					/>
 				)}
 			</ListActionSlot>
-			{icon && <>{icon}</>}
+			{icon && <span className="text-muted-foreground">{icon}</span>}
 			{label ?? "Gruppe"}
 		</ListGroupHeader>
 	);

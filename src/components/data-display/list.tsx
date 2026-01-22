@@ -29,7 +29,7 @@ export function ListGroupHeader({
 	return (
 		<li
 			className={cn(
-				"flex items-center justify-start gap-2 border-border border-b bg-muted px-2 font-medium text-foreground text-sm first:border-t [&_svg]:size-4",
+				"flex items-center justify-start gap-2 border-border border-y bg-muted px-2 font-medium text-foreground text-sm first:border-t [&_svg]:size-4 data-[collapsed=true]:[:not(:last-child)]:border-b-0",
 				'group-data-[layout="compact"]/list:h-8.5 group-data-[layout="default"]/list:h-10 group-data-[layout="loose"]/list:h-12',
 				className,
 			)}
@@ -46,7 +46,7 @@ export function ListItem({ className, ...props }: React.ComponentProps<"li">) {
 				"group/list-item flex items-center justify-start gap-2 px-2 py-(--list-py) text-sm hover:bg-muted/60 data-selected:bg-primary/10 dark:data-selected:bg-primary/20",
 				'group-data-[layout="compact"]/list:h-8.5 group-data-[layout="default"]/list:h-10 group-data-[layout="loose"]/list:h-12',
 				"[&:hover_[role='checkbox']]:opacity-100 [&_[role='checkbox']:hover]:border-foreground/70 [&_[role='checkbox'][data-checked]]:border-primary [&_[role='checkbox'][data-checked]]:opacity-100 **:[[role='checkbox']]:border-foreground/40 **:[[role='checkbox']]:opacity-0",
-
+				"[&:not(:has([data-slot=list-action-slot]))]:pl-11",
 				className,
 			)}
 			data-slot="list-item"

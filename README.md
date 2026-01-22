@@ -1,29 +1,29 @@
-# Create T3 App
+# data-display
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+> Sample implementation of [`@tanstack/react-table`](https://tanstack.com/table/latest) for a data list using [`shadcn/ui`](https://ui.shadcn.com/).
 
-## What's next? How do I make an app with this?
+This minimal data-display demo shows how `@tanstack/react-table` can be used to display data in a list with grouping, sorting, and filtering. The Demo is compatible with `shadcn/ui` and `base-ui`.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+The demo contains the following functionalities:
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Grouping
+    - Expanding and collapsing groups
+- Sorting
+- Column visibility
+- Different layout options (compact, default, loose)
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+ToDo: Implement filtering and selection actions, pagination, and more.
 
-## Learn More
+## How it works
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+Instead of using the default `table` component, we use a custom `List` component. The `List` component is a wrapper around the `ul` element and adds a few extra features:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- `data-layout` attribute to set the layout of the list
+- `data-slot` attribute to set the slot of the list item
+- `data-collapsed` attribute to set the collapsed state of the list item
+- `data-selected` attribute to set the selected state of the list item
+- `data-checked` attribute to set the checked state of the list item
+- `data-expanded` attribute to set the expanded state of the list item
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+We then create a custom `DataList` component for each Data List. The `DataList` component is a wrapper around the `List` component and combines the `List` component with the `@tanstack/react-table` component. We use the `DataDisplayOptions` component to display the options for the Data List like grouping, sorting, and column visibility.
 
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
